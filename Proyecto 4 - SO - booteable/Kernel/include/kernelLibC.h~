@@ -1,0 +1,29 @@
+#ifndef	_KERNEL_LIB_C_
+#define _KERNEL_LIB_C_
+
+#include "../../User_space/C/include/stddefImpl.h"
+#include "./defs.h"
+
+/* Definido en varios .h como por ejemplo ioctl.h */
+#define	__user
+
+#define MAX_SIMULTANEOUS_TIMERTICK_LISTENERS 30
+
+int  int80(int syscall, int  handle,  void  *buffer,  int  nbyte);
+
+void loadDrivers();
+
+void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset
+			, byte access, byte cero);                          
+
+long sys_write(unsigned int fd, char __user *buf
+		      , size_tImpl count);
+
+long sys_read(unsigned int fd, char __user *buf,
+		     size_tImpl count);
+
+int addTimertickListener(void (*func)() );
+
+void k_clear_screen(void);
+
+#endif

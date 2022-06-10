@@ -1,0 +1,12 @@
+#ifndef _KB_DRIVER_C_
+#define _KB_DRIVER_C_
+  
+#define KB_BUFFER_SIZE 1
+
+int keyPressed(char scancode);
+
+int printRegisters(long gs, long fs, long es, long ds, long ss,long cs,
+	long edi, long esi, long ebp, long esp, long ebx, long edx,
+	long ecx, long eax, long eip);	 
+
+#endif

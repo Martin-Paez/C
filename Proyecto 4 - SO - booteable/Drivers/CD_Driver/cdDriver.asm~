@@ -1,0 +1,15 @@
+GLOBAL	_out
+GLOBAL  _in
+
+SECTION .text
+
+_out:
+	pop	eax
+	pop	ebx
+	out	eax, ebx
+	ret
+
+_in:
+	pop	eax
+	in	eax, eax
+	ret

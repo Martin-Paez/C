@@ -1,0 +1,66 @@
+#include "../../User_space/C/include/stdioImpl.h"
+#include "./include/cdDriverAsm.h"
+
+/* Ports ids */
+#define DRIVE_SELECT		6
+#define COMMAND			7
+#define STATUS			7
+#define LBAMID			4
+#define LBAHI			3
+
+#define	IDENTIFY_COMMAND	0xa1
+#define	DQR			8
+#define ERR			1
+
+#define BUS_COUNT		4
+#define DEVICES_PER_BUS		2	
+static const int masterSlave[DEVICES_PER_BUS] = { 0xa0, 0xb0 };
+static const int buses[BUS_COUNT] = { 0x1F0, 0x170, 0x1E8, 0x168 };
+
+static int bus;
+
+void setBus(int busAdd) {
+	bus = busAdd;
+}
+
+void out(int port, int info) {
+	_out(bus + port, info);
+}
+
+int in(int port) {
+	return _in(bus + port);
+}
+
+#define isSet(byte, flagPos)	(byte & flagPos)
+int *activeAtaBasePorts(void) {
+	int i, j, k, devicesCount=0;
+	for ( i=0; i < BUS_COUNT; i++ ) {
+		setBus(buses[i]);
+		for ( j=0; j < DEVICES_PER_BUS; j++ ) {
+			_out(DRIVE_SELECT, masterSlave[i]);
+			for ( k=5; k > 1; k-- ) {
+				_out(k, 0);
+			}
+			_out(COMMAND, IDENTIFY_COMMAND);
+			if ( (k = in(STATUS)) != 0 ) {
+				int continueLoop = 1;
+				while ( continueLoop ) {
+					continueLoop = (k & 128) == 1;
+					k = in(STATUS);
+				}
+				if ( in(LBAMID) == 0 && in(LBAHI) == 0 ) {
+					int continueLoop = 1;
+					while (continueLoop) {
+						k = in(STATUS);
+						if ( isSet(k,DQR) == 1 ) {
+							continueLoop = 0;
+							printfImpl("detected \n");
+						} else if ( isSet(k, ERR) == 1)
+							continueLoop = 0;
+					}
+				}
+			}
+		}
+	}
+}
+

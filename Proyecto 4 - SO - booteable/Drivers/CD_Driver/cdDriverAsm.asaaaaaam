@@ -1,0 +1,81 @@
+; Phase 1) 
+; a) Set up the standard ATA IO port registers with ATAPI specific values.
+
+;0x1F0 through 0x1F7, and 0x170 through 0x177
+;0x1E8 through 0x1EF, and 0x168 through 0x16F
+
+section .text
+ataDevices:
+	push	ebp		; Lo uso mas adelante
+	pusha
+
+	mov	ax,0xA0		; Detect Master Atapi
+	call	detectAtapi
+	sal	al,4
+	push	al
+	mov	ax,0xB0
+	call	detectAtapi	; Detect Slave Atapi
+	pop	bl
+	or	al,bl	
+	push	al		; Guardo 'al' (popa lo va a pisar)
+	mov	ebp,esp		; Guardo la pos donde deje 'al'
+	add	esp,4		; Me preparo para 'popa'
+
+	popa	
+	mov	eax,0x0
+	mov	al,[ebp]
+	pop	ebp
+	ret
+
+detectAtapi:			; Recive en ax : 0xA(Master) o 0xB(Slave)
+	mov	cl, busCount
+nextBus:
+	dec	cl
+	mov	bx, [bus + cl]
+	add	bx, 6		
+	out	bx, ax		; Master/Slave select	
+loop:	dec	bx
+	out	bx,0
+	cmp	bx,2	
+	jne	loop
+	add	bx,5		; port 0x1f7
+	out	bx,0xEC		; IDENTIFY command
+	in	dl,bx
+	cmp	dx,0
+	je	noAtaDevice
+loop2:				; dl ya tiene un valor leido al llegar al loop
+	and	dl,0x80		; 0x80 = bit siete prendido = BSY flag
+	cmp	dl,0
+	je	stopl2
+	in	dl,bx
+	jmp	loop2
+stopl2:	sub	bx,2
+	in	dl,bx
+	cmp	dl,0
+	jne	noAtaDevice
+	sub	bx,1
+	in	dl,bx
+	cmp	dl,0
+	jne	noAtaDevice
+	add	bx,3
+loop3:	in	dl,bx
+	and	dl,0x1		; 0x1 = bit uno prendido = ERR flag
+	je	error
+	in	dl,bx
+	and	dl,0x8		; 0x8 = bit tres prendido = DRQ flag
+	jne	loop3
+	mov	[devices + cl], 1h	; Ata device
+error:
+noAtaDevice:
+	cmp	cl,0
+	jne	nextBus
+	
+
+ 	
+section .data
+	bus		db	0x1F0, 0x170, 0x1EF, 0x16F
+	busCount	equ	4
+	devices		db	0,0,0,0
+
+; Then Send the ATA PACKET command to the device exactly as you would with any 
+; other ATA command: outb (ATA Command Register, 0xA0)pi

@@ -1,0 +1,170 @@
+/* AGREGAR UNA MACRO CON EL PATH DE LA API DE C */
+
+#include "../../User_space/C/include/stdlibImpl.h"
+
+#define DEFAULT_ATTRIBUTE 0x07
+
+#define VIDEO_MEM_START	( (char *) 0xb8000 )
+#define	COLS		(0X50 * 2)
+#define	TOTAL_ROWS	(0X19)
+
+static int out;
+
+static  struct output_t {
+  char *FIRST;
+  char	*current;
+  char	*LAST;
+  char	*LAST_ROW_FIRST_COL;
+  int	ROWS;
+} outputs[2];
+
+void setOutput(int fd) {
+	out = fd - 1;
+}
+
+int isOutputReady() {
+	return out == 0 || out == 1;
+}
+
+static char* scroll(){
+  char *to = outputs[out].FIRST;
+  char *from = outputs[out].FIRST + COLS;
+  int i, j;
+  
+  for ( j=0; j < COLS; j++ )
+    for ( i=0; i<outputs[out].ROWS; i++, to++,from++ )
+      *to = *from;
+    while ( to <= outputs[out].LAST ) {
+      *to = ' ';
+      to += 2;
+    }
+  outputs[out].current = outputs[out].LAST_ROW_FIRST_COL;
+  return outputs[out].current;
+}
+
+static char* nextVideoPos() {
+  if ( outputs[out].current == outputs[out].LAST )
+    return scroll();
+  
+  return outputs[out].current += 2;
+}
+
+static int fullRows() {
+ return (int) ( ( outputs[out].current - outputs[out].FIRST ) / COLS ); 
+}
+
+static char * home() {
+  return  outputs[out].FIRST + ( fullRows() ) * COLS - 2;
+}
+
+static void lineBreak() {
+  if ( outputs[out].current > outputs[out].LAST_ROW_FIRST_COL )
+    scroll();
+  else
+    outputs[out].current = home() + COLS;
+}
+/*
+void moveCursor(row, col) {
+  //IMPLEMENTAR
+}
+*/
+/* Siempre da OK. No se chequea nada (se considera la implementacion por fuera
+ * de las espectativas del tpe). 
+ * El prototipo de la funcion es similar al usado en el kernel de Linux. En el
+ * kernel de Linux se usa "const void __user *addr", donde __user es una macro
+ * que simplemente sirve para indicar al programador que es una direccion enviada
+ * por el usurio (y que por lo tanto hay que tomar los recaudos necesarios).
+ */
+static inline int access_ok(int type, void * addr, unsigned long size) {
+  return 1;
+}
+
+int vWrite(int fd, char*  buff, int size) {
+
+	/* La idea es que como se esta tratando de acceder a posiciones de memoria que
+	 * fueron dadas por el usuario, hay que tener los recaudos necesarios para 
+	 * evitar que sean posiciones de memoria invalidas. Sobre todo si es el kernel
+	 * el que hace el llamado a esta funcion (como se espera), ya que desde el kernel
+	 * se puede acceder a toda la memoria.
+	 */
+  if ( ! access_ok(sizeof(char), buff, size) )
+    	return -1;
+
+  int i;
+  setOutput(fd);
+  if ( ! isOutputReady() )
+	return -1;
+
+  for ( i=0; i<size; i++) {
+    switch (buff[i]) {
+      case '\n': 
+				lineBreak();
+				break;
+      case '\b':
+				*outputs[out].current = ' ';
+				if ( outputs[out].current - 2 >= outputs[out].FIRST ) 
+					outputs[out].current -= 2;
+				break;
+      default:
+				*(nextVideoPos()) = buff[i]; /* OJO VER NOTA */
+    }
+  }
+  
+  return 1;
+}
+
+/* first y last son direcciones de memoria */
+void clear(char *first, char *last, char emptyChar) {
+	char *i=first;
+	while(i < last)
+	{
+		*i = emptyChar;
+		i += 2;
+	};
+}
+
+void clearScreen(int fd){
+	setOutput(fd);
+	if ( ! isOutputReady() )
+		return -1;
+	clear(outputs[out].FIRST, outputs[out].LAST, ' ');
+	outputs[out].current = outputs[out].FIRST - 2;
+}
+
+static void whiteMode() {
+	clear(outputs[1].FIRST + 1, outputs[0].LAST + 1, DEFAULT_ATTRIBUTE);
+}
+
+void videoInitialize(int headerHeight_inHexa) {
+	outputs[1].ROWS = headerHeight_inHexa;
+	outputs[0].ROWS = TOTAL_ROWS - outputs[1].ROWS;
+	outputs[1].FIRST = VIDEO_MEM_START;
+	outputs[0].FIRST = outputs[1].FIRST + outputs[1].ROWS * COLS;
+	outputs[1].current = outputs[1].FIRST - 2;
+	outputs[0].current = outputs[0].FIRST - 2;
+	outputs[1].LAST = outputs[0].FIRST - 2; 
+	outputs[0].LAST = outputs[0].FIRST + outputs[0].ROWS * COLS - 2;
+	outputs[1].LAST_ROW_FIRST_COL = outputs[1].FIRST + (outputs[1].ROWS-1) * COLS - 2; 
+	outputs[0].LAST_ROW_FIRST_COL = outputs[0].FIRST + (outputs[0].ROWS-1) * COLS - 2;
+
+/*	HEADER_HEIGHT = headerHeight_inHexa;
+	ROW_SIZE = 0X19 - HEADER_HEIGHT;
+	COL_SIZE = 0X50 * 2;
+	FIRST = HEADER_START + HEADER_HEIGHT * COL_SIZE;
+	current = FIRST - 2;
+	HEADER_END = FIRST - 2;	
+	LAST = FIRST + ROW_SIZE * COL_SIZE - 2;
+	LAST_ROW_FIRST_COL = FIRST + (ROW_SIZE-1) * COL_SIZE - 2;
+*/
+	whiteMode();
+	clear(outputs[1].FIRST, outputs[0].LAST, ' ');
+/*
+	int cols=0x50 * 2, rows = 0x19;
+	*((char *)(0Xb8000)) = '1';
+	*((char *)(0Xb8000 + cols - 2)) = '2';
+	*((char *)(0Xb8000 + 0XA * cols)) = '3';
+	*((char *)(0Xb8000 + 0XA * cols + cols - 2)) = '4';
+	*((char *)(0Xb8000 + (rows-1) * cols)) = '5';
+	*((char *)(0Xb8000 + rows * cols - 2)) = '6';
+*/
+}
