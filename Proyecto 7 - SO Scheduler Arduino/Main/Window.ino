@@ -3,7 +3,7 @@
 #define ADD_TAB(tab,w)      addElem(tab, (struct Node*) _TABS(w));
 
 
-struct ScreenElem * loadWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows, char *buff) { 
+struct Window * loadWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows, char *buff) { 
   ScreenElem *w = newEmptyWindow(left, top, cols, rows);
   if ( w  == NULL )
     return NULL;
@@ -12,7 +12,7 @@ struct ScreenElem * loadWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows, char
   return NULL;
 }
 
-struct ScreenElem * newWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows) { 
+struct Window * newWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows) { 
   ScreenElem *w = newEmptyWindow(left, top, cols, rows);
   if ( w == NULL )
     return NULL;
@@ -22,7 +22,7 @@ struct ScreenElem * newWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows) {
 }
 
 ScreenElem wM;
-struct ScreenElem * newEmptyWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows) { 
+struct Window * newEmptyWindow(BYTE left, BYTE top, uBYTE cols, uBYTE rows) { 
   ScreenElem *w = &wM; /*(ScreenElem) reserveMem( sizeof(ScreenElem) ) */
   if ( ! w )
     return NULL;

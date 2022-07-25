@@ -51,37 +51,6 @@
 /* --------------------------------- LCD ----------------------------------*/
 /* ------------------------------------------------------------------------*/
 
-            
-        union Data {
-            char            *buff;
-            struct Node     *tabs;
-        };
-
-        struct ScreenElem {
-            Data      e;
-            uBYTE     cols;
-            uBYTE     rows;
-            BYTE      x = 0;
-            BYTE      y = 0;
-        };
-
-    #define _MOVE_INDEX(n,i,L)   if ( i + n <= L  && i + n >= -L ) i += n;
-    #define _TABS(w)            (w)->e.tabs
-    #define _TAB(i,w)           ( (Tab*) ( getFromLast(i, _TABS(w))->e ) )
-    #define _BUFF(tab)          (char *)( (tab)->e.buff + (tab)->y * (tab)->cols + (tab)->x )
-
-    #define W_POS(w)            (w)->x ,  (w)->y
-    #define W_SIZE(w)           (w)->cols ,  (w)->rows
-    #define V_MOVE(n,e)         _MOVE_INDEX( n, (e)->y, (e)->rows )
-    #define H_MOVE(n,e)         _MOVE_INDEX( n, (e)->x, (e)->cols )
-   
-    #define BUFF(i,w)           _BUFF( _TAB(i,w) )
-    #define V_SCROLL(n,i,w)     _MOVE_INDEX( n, _TAB(i,w)->y, (w)->rows )
-    #define H_SCROLL(n,i,w)     _MOVE_INDEX( n, _TAB(i,w)->x, (w)->cols )
-     
-    typedef struct ScreenElem Window;
-    typedef struct ScreenElem Tab;
-
 
     /* Importante : Maxima cantidad de LiquidCrystals */
     #define LCD_RESOURCES     2
