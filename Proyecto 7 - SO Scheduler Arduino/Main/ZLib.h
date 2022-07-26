@@ -56,7 +56,7 @@
     #define LCD_RESOURCES     2
     BOOL addLcdResource (LiquidCrystal *lcd, char *sourceMatrix, int cols, int rows, int windows);
 
-    BOOL initLcd(LiquidCrystal *lcd, char *sourceMatrix, int cols, int rows, int windows) ;
+    int initLcd(LiquidCrystal *lcd, char *sourceMatrix, int cols, int rows, int windows) ;
 
     void refreshScreen();
     void refreshWindow();

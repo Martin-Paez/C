@@ -181,7 +181,13 @@ void enableContinueBelow(){
   _lcd->continueBelow = TRUE;
 }
 
-BOOL initLcd(LiquidCrystal *lcd, char *sourceMatrix, int cols, int rows, int windows) {
+BOOL selectLcd(int id) {
+  if ( --id > 0  &&  id < lcdRsrcCount  )
+    return FALSE;
+  
+}
+
+int initLcd(LiquidCrystal *lcd, char *sourceMatrix, int cols, int rows, int windows) {
   if ( lcdRsrcCount == LCD_RESOURCES )
     return FALSE;
   int i=-1;

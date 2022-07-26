@@ -35,14 +35,13 @@ void modifNkill(void *r);
 
 
 
-#define IS_NOT_DIGIT(k)  ( k<'0' || k>'9' )
 void modifNLoop(char k) {
   switch (k) {
     case '-': deleteChar();     break;
     case '=': endModifNLoop();  break;
     default:
-      if ( IS_NOT_DIGIT(k) )
-        return; // CURSOR VISIBLE, evita refresh
+      if ( k<'0' || k>'9' )
+        return; // CURSOR VISIBLE, evitar refresh
       readAndShow(k);
   }
   refreshWindow();
@@ -55,6 +54,7 @@ void modifNLoop(char k) {
 #define CURSOR_BACK       moveCursor( INDEX_POS ); // CURSOR = STACK POINTER
 #define DEL_SCREEN_CHAR   printS( INDEX_POS , " "); CURSOR_BACK
 #define SHIFT_LEFT        for ( int a = 0 ; a < SIZE(mNr->s)-1 ; a++) mNr->s[a]=mNr->s[a+1]
+#define ADD_DIGIT(i,k)    mNr->s[mNr->i] = k;
 
 #define THERE_IS_A_ZERO_TO_THE_LEFT   mNr->s[0] == '0' && IS_NOT_EMPTY
 
@@ -64,7 +64,7 @@ void readAndShow(char k) {
   else if ( REMAIN_SPACE )
     mNr->i++;
 
-  mNr->s[mNr->i] = k;
+  ADD_DIGIT(i,k);
   printS( INDEX_POS , String(k) );
   if ( IS_THE_LAST )
     CURSOR_BACK;

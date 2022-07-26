@@ -23,7 +23,7 @@
     
 
     #define _MOVE_INDEX(n,i,L)   if ( i + n <= L  && i + n >= -L ) i += n;
-    #define _TABS(w)            (w)->sW.tabs
+    #define _TABS(w)            (w)->sE.tabs
     #define _TAB(i,w)           ( (Tab*) ( getFromLast(i, _TABS(w))->e ) )
     #define _BUFF(tab)          (char *)( (tab)->e.buff + (tab)->y * (tab)->cols + (tab)->x )
 
