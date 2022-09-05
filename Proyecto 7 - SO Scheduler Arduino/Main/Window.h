@@ -20,7 +20,7 @@
         struct Window { SCREEN_ELEM
             struct Node       * sE;
         };
-    
+
 
     #define _MOVE_INDEX(n,i,L)   if ( i + n <= L  && i + n >= -L ) i += n;
     #define _TABS(w)            (w)->sE.tabs

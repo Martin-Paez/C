@@ -1,13 +1,53 @@
-#include "ZKernel.h"
+/*#include "ZKernel.h"
 #include "LcdMachine.h"
 #include "Demultiplexer.h"
 #include "ZLib.h"
-#include "List.h"
+#include "List.h"*/
 
-char bb[1][4][16] = { "ccccccccccccccc", "ddddddddddddddd", "ccccccccccccccc","ddddddddddddddd",};
 
 LiquidCrystal myLcd(TX,RX,D4,D5,D6,D7);
-Window *w;
+
+void setup() {
+
+}
+
+void loop() {
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Window *w;
+char bb[1][4][16] = { "ccccccccccccccc", "ddddddddddddddd", "ccccccccccccccc","ddddddddddddddd",};
+
 
 void setup() {
   initDemultiplexer();
@@ -24,7 +64,7 @@ void setup() {
   selectOutput(0);
   psId = exeLcdMachine( &myLcd );
   if ( ! psId || ! addDemultiplexer(psId, 0) )
-    while(1);*/
+    while(1);
 }
 
 void loop()
@@ -59,5 +99,5 @@ void loop()
       H_MOVE(1,_TAB(0,w));
       break;
   } 
-}
+}*/
 
