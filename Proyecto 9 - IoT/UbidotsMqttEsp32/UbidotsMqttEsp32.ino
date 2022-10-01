@@ -2,7 +2,6 @@
 #include "UbiNeyenMartin.h"
 
 void setup() {
-  Serial.println("Bienvenido!");
   Serial.begin(115200);   
   ubiSetup(callback); 
   ubiSubscribe(&boton);
