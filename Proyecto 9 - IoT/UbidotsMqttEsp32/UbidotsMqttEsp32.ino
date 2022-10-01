@@ -10,7 +10,7 @@ void setup() {
 
 void loop() {
   ubiConnect();
-  ubiPublish( BOTON(FALSE) );
+  ubiPublish(&boton);
   ubiPublish( LDR(/*analogRead(13) * (100.0 / 4096.0)*/ 50) );
   ubiLoop();
 }
@@ -30,6 +30,7 @@ void callback(char *topic, byte *payload, unsigned int length)
       FREQUENCY(&boton,0) = STOP;
       break;
     case '1':
+      BOTON(FALSE)
       FREQUENCY(&boton,0) = 5000;
       break;
   }
