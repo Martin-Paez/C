@@ -17,7 +17,7 @@
   void ubiSubscribe(Device *d);
   void ubiSetCallback(void callback(char *, unsigned char *, unsigned int ));
   
-  void ubiPublish(Device *d);
+  void ubiRefresh(Device *d);
   
   int ubiAdd(Device *d, int var);
   void ubiCommit(Device *d);

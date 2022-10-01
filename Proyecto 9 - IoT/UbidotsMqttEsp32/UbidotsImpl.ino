@@ -64,7 +64,7 @@ void subscribeAllVars(Device *d)
   }
 }
 
-void ubiPublish(Device *d)
+void ubiRefresh(Device *d)
 {
   int total = 0;
   for(int i=0; i < d->vSize; i++)

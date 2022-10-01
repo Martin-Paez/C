@@ -9,8 +9,8 @@ void setup() {
 
 void loop() {
   ubiConnect();
-  ubiPublish(&boton);
-  ubiPublish( LDR(/*analogRead(13) * (100.0 / 4096.0)*/ 50) );
+  ubiRefresh(&boton);
+  ubiRefresh( LDR(/*analogRead(13) * (100.0 / 4096.0)*/ 50) );
   ubiLoop();
 }
 
