@@ -68,25 +68,25 @@ void ubiRefresh(Device *d)
 {
   int total = 0;
   for(int i=0; i < d->vSize; i++)
-    total += ubiAdd(d, i);
+    total += ubiCommit(d, i);
   if (total > 0) 
   {
     Serial.print("Publicando ");
     Serial.print(d->vSize);
     Serial.print(" variables del dispositivo ");
     Serial.println(DEVICE(d));
-    ubiCommit(d);
+    ubiPush(d);
   }
 }
 
-void ubiCommit(Device *d)
+void ubiPush(Device *d)
 {
   Serial.println("Publicando JSON...");
   ubidots.publish(DEVICE(d));
   Serial.println("Publicado exitosamente.");
 }
 
-int ubiAdd(Device *d, int var)
+int ubiCommit(Device *d, int var)
 {
   if ( NOT_PUBLISH_TIME(d,var) )
     return 0;

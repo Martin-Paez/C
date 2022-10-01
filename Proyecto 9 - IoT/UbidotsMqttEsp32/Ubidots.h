@@ -19,7 +19,7 @@
   
   void ubiRefresh(Device *d);
   
-  int ubiAdd(Device *d, int var);
-  void ubiCommit(Device *d);
+  int ubiCommit(Device *d, int var);
+  void ubiPush(Device *d);
 
 #endif
