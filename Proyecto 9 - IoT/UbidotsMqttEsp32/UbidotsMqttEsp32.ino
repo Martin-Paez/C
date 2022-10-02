@@ -29,7 +29,7 @@ void callback(char *topic, byte *payload, unsigned int length)
       FREQUENCY(&boton,0) = STOP;
       break;
     case '1':
-      BOTON(FALSE)
+      BOTON(FALSE);
       FREQUENCY(&boton,0) = 5000;
       break;
   }
