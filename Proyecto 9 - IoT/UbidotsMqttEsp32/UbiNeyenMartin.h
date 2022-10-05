@@ -4,7 +4,6 @@
   #include "Device.h"
   #include  "Macros.h"
 
-
 /* ---------------------------------  BOTON ------------------------------- */
 
   #define BOTON_FREQ  5000
