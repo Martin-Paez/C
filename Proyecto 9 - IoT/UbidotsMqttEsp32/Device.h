@@ -18,16 +18,21 @@
   //      ubiCommit( &botonera );             // publica solo el boton verde
   //
   #define CREATE_MACRO(device, var, val)    ([&device](int i) -> struct Device* { \
-                                                VAL(&device,var) = i; \
+                                                SET(&device,var,i); \
                                                 return &device;\
                                               })(val)
-                                              
   struct Var
   {
-    int   timer;
-    int   frequency;
-    char* varName;
-    int   value;
+    int       timer;
+    int       frequency;
+    bool      stop;
+    char*     varName;
+    bool      eEsInt;
+    union V
+      {
+        int   value;
+        int   (*f)();
+      }       e;
   };
   
   struct Device 
@@ -39,14 +44,19 @@
   
   #define DEVICE(d)               (d)->device
   #define TOPIC(d,v)              DEVICE(d), NAME(d,v)
-  
-  #define VAL(d,v)                (d)->vars[v].value
+
+  #define V(d,v)                  (d)->vars[v].e
+  #define SET(d,v,i)              ( V(d,v).value = i )
+  #define GET(d,v)                ( ((d)->vars[v].eEsInt) ? V(d,v).value : (V(d,v).f)() )
   #define NAME(d,v)               (d)->vars[v].varName
-  #define TOPIC_VAL(d,v)          NAME(d,v), VAL(d,v)
+  #define TOPIC_VAL(d,v)          NAME(d,v), GET(d,v)
   
   #define TIME(d,v)               (d)->vars[v].timer
   #define ELAPSED(d,v)            ( millis() - TIME(d,v) )
   #define FREQUENCY(d,v)          (d)->vars[v].frequency
-  #define NOT_PUBLISH_TIME(d,v)   ( FREQUENCY(d,v) == STOP || ELAPSED(d,v) < FREQUENCY(d,v) )
+  #define RESET(d,v)              ((d)->vars[v].timer = 0 )
+  #define DISABLE_PUBLISH(d,v)    ((d)->vars[v].stop = true )
+  #define ENABLE_PUBLISH(d,v)     RESET(d,v); (d)->vars[v].stop = false
+  #define NOT_PUBLISH_TIME(d,v)   ((d)->vars[v].stop || ELAPSED(d,v) < FREQUENCY(d,v) )
                                           
 #endif

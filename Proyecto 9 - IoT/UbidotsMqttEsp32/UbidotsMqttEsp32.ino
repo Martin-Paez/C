@@ -1,16 +1,19 @@
-#include "Ubidots.h"
+ #include "IUbidots.h"
 #include "UbiNeyenMartin.h"
 
 void setup() {
-  Serial.begin(115200);   
+  Serial.begin(115200);
+  #ifdef COMPILE_ESP32
+    analogReadResolution(RESOLUTION); // Solo para esp32
+  #endif
   ubiSetup(callback); 
   ubiSubscribe(&boton);
 }
 
 void loop() {
   ubiConnect();
-  ubiRefresh(&boton);
-  ubiRefresh( LDR(/*analogRead(13) * (100.0 / 4096.0)*/ 50) );
+  ubiCheck(&boton);
+  ubiCheck(&ldr);
   ubiLoop();
 }
 
@@ -25,12 +28,11 @@ void callback(char *topic, byte *payload, unsigned int length)
 
   switch((char)payload[0])
   {
-    case '0':
-      FREQUENCY(&boton,0) = STOP;
+    case '0': // Actualizo estado de Boton
+      DISABLE_PUBLISH(BOTON(FALSE), PRESIONADO);
       break;
-    case '1':
-      BOTON(FALSE);
-      FREQUENCY(&boton,0) = 5000;
+    case '1': // Preparo publicacion off
+      ENABLE_PUBLISH(BOTON(FALSE),PRESIONADO);
       break;
   }
 }

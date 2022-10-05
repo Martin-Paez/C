@@ -1,14 +1,7 @@
-//#include "Ubidots.h"
+//#include "IUbidots.h"
 #include "Macros.h"
-
-//#include "WiFi.h"
-#include "UbidotsEsp32Mqtt.h"
-Ubidots ubidots(UBIDOTS_TOKEN);
-
-//#include "FakeUbiEsp.cpp"
-//FakeUbiEsp ubidots;
-
-Device* subjects[SUBJECTS_BUFF];
+  
+Device* subjects[SUBSCRIPTIONS_BUFF];
 int subjIndex=0;
 
 void ubiSetup(void callback(char *, unsigned char *, unsigned int ))  // TODO, recibir callback
@@ -28,7 +21,7 @@ void ubiConnect(){
     Serial.println("Reconectando a Ubidots...");
     ubidots.reconnect();
     Serial.println("Conectado exitosamente");
-    for(int i=0; i < SUBJECTS_BUFF; i++)
+    for(int i=0; i < SUBSCRIPTIONS_BUFF; i++)
       subscribeAllVars(subjects[i]);
     Serial.println("Suscripcion exitosa.");
   }
@@ -41,7 +34,7 @@ void ubiLoop()
 
 void ubiSubscribe(Device *d)
 {
-  if ( subjIndex >  SUBJECTS_BUFF )
+  if ( subjIndex >  SUBSCRIPTIONS_BUFF )
   {
     Serial.println("Limite de suscripciones alcanzado.");
     Serial.println("Puede aumentarlo en Ubidots.h.");
@@ -64,7 +57,7 @@ void subscribeAllVars(Device *d)
   }
 }
 
-void ubiRefresh(Device *d)
+void ubiCheck(Device *d)
 {
   int total = 0;
   for(int i=0; i < d->vSize; i++)
@@ -95,7 +88,7 @@ int ubiCommit(Device *d, int var)
   Serial.print("Escribiendo JSON. Variable ");
   Serial.print(NAME(d,var));
   Serial.print(" = ");
-  Serial.print(VAL(d,var));
+  Serial.print(GET(d,var));
   Serial.print(" del dispositivo ");
   Serial.print(DEVICE(d));
   Serial.println("...");
