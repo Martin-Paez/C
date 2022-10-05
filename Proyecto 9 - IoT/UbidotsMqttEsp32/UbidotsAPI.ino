@@ -34,13 +34,13 @@ void ubiLoop()
 
 void ubiSubscribe(Device *d)
 {
-  if ( subjIndex >  SUBSCRIPTIONS_BUFF )
+  if ( subjIndex >=  SUBSCRIPTIONS_BUFF )
   {
     Serial.println("Limite de suscripciones alcanzado.");
     Serial.println("Puede aumentarlo en Ubidots.h.");
     return;
   }
-  //subjects[subjIndex++] = d;
+  subjects[subjIndex++] = d;
   subscribeAllVars(d);
 }
 

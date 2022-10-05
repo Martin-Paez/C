@@ -8,13 +8,13 @@ void setup() {
   #endif
   pinMode(LDR_PIN,INPUT);
   ubiSetup(callback); 
-  ubiSubscribe(&boton);
+  //ubiSubscribe(&boton);
 }
 
 void loop() {
   ubiConnect();
   ubiCheck(&boton);
-  ubiCheck(&ldr);
+  //ubiCheck(&ldr);
   ubiLoop();
 }
 

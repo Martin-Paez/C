@@ -6,22 +6,22 @@
 
 /* ---------------------------------  BOTON ------------------------------- */
 
-  #define BOTON_FREQ  5000
+  #define BOTON_FREQ  1000
   #define PRESIONADO  0
 
+  char a[] = "presionado";
   struct Var presionado = 
   { 0 /*timer = 0 segundos*/,
     BOTON_FREQ, 
     true /*pausado, no publica*/, 
-    "presionado", 
+    a, 
     true ,/*el valor es un entero almacenado en la estructura*/
     FALSE /*el boton se encuentra sin precionar*/,
   };
-  struct Device boton = {"boton", 1, {presionado}};
   
   #define BOTON(val)  CREATE_MACRO(boton, PRESIONADO , val)
 
-
+  
 /* ----------------------------------  LDR -------------------------------- */
 
   #define LDR_FREQ    5000
@@ -36,16 +36,22 @@
   #endif
   #define READ_LDR analogRead(LDR_PIN) * (100.0 / pow(2,RESOLUTION))
 
+  char aa[]="intensidad";
   int ff() {return READ_LDR;}
   struct Var intensidad = 
   {
     0 /*timer = 0 segundos*/,
     LDR_FREQ, 
     false /*listo para publicar*/, 
-    "intensidad", 
+    aa, 
     false, /*el valor se lee desde una funcion*/
-    {.f=[]()->int{{return READ_LDR;}}} /*los valores se obtienen de un analogRead*/
+    {.f=ff/*[]()->int{{return READ_LDR;}}*/} /*los valores se obtienen de un analogRead*/
   };
-  struct Device ldr = {"ldr", 1, {intensidad}};
+  struct Var ldrVars[] = {intensidad};
+  char s[] = "ldr";
+  struct Device ldr = {s, 1, ldrVars};
 
+  struct Var botonVars[] = {presionado};
+  char ss[] = "boton";
+  struct Device boton = {ss, 1, botonVars };
 #endif

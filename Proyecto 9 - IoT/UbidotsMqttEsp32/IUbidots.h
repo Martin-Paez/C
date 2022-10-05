@@ -23,7 +23,7 @@
     Ubidots ubidots(UBIDOTS_TOKEN);
   #else                               // Para simular con arduino
     #include "FakeUbiEsp.cpp"       
-    FakeUbiEsp ubidots(millis, true);
+    FakeUbiEsp ubidots(millis, false);
   #endif
 
 
