@@ -1,4 +1,4 @@
- #include "IUbidots.h"
+#include "IUbidots.h"
 #include "UbiNeyenMartin.h"
 
 void setup() {
@@ -6,6 +6,7 @@ void setup() {
   #ifdef COMPILE_ESP32
     analogReadResolution(RESOLUTION); // Solo para esp32
   #endif
+  pinMode(LDR_PIN,INPUT);
   ubiSetup(callback); 
   ubiSubscribe(&boton);
 }

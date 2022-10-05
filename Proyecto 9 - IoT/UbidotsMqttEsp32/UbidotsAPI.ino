@@ -1,6 +1,6 @@
-//#include "IUbidots.h"
+#include "IUbidots.h"
 #include "Macros.h"
-  
+
 Device* subjects[SUBSCRIPTIONS_BUFF];
 int subjIndex=0;
 
@@ -40,7 +40,7 @@ void ubiSubscribe(Device *d)
     Serial.println("Puede aumentarlo en Ubidots.h.");
     return;
   }
-  subjects[subjIndex++] = d;
+  //subjects[subjIndex++] = d;
   subscribeAllVars(d);
 }
 

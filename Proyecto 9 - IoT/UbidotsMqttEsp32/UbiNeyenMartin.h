@@ -4,6 +4,7 @@
   #include "Device.h"
   #include  "Macros.h"
 
+
 /* ---------------------------------  BOTON ------------------------------- */
 
   #define BOTON_FREQ  5000
@@ -19,7 +20,7 @@
   };
   struct Device boton = {"boton", 1, {presionado}};
   
-  #define BOTON(val)  CREATE_MACRO(boton, INTENSIDAD , val)
+  #define BOTON(val)  CREATE_MACRO(boton, PRESIONADO , val)
 
 
 /* ----------------------------------  LDR -------------------------------- */
@@ -29,10 +30,12 @@
   
   #ifdef COMPILE_ESP32
     #define RESOLUTION  12 
+    #define LDR_PIN     13
   #else
     #define RESOLUTION  10 // Compatible con Arduino Uno
+    #define LDR_PIN     A0
   #endif
-  #define READ_LDR analogRead(13) * (100.0 / pow(2,RESOLUTION))
+  #define READ_LDR analogRead(LDR_PIN) * (100.0 / pow(2,RESOLUTION))
 
   int ff() {return READ_LDR;}
   struct Var intensidad = 
@@ -45,5 +48,5 @@
     {.f=[]()->int{{return READ_LDR;}}} /*los valores se obtienen de un analogRead*/
   };
   struct Device ldr = {"ldr", 1, {intensidad}};
-                                          
+
 #endif
