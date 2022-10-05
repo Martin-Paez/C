@@ -33,7 +33,7 @@ void callback(char *topic, byte *payload, unsigned int length)
       DISABLE_PUBLISH(BOTON(FALSE), PRESIONADO);
       break;
     case '1': // Preparo publicacion off
-      ENABLE_PUBLISH(BOTON(FALSE),PRESIONADO);
+      ENABLE_PUBLISH(BOTON(FALSE), PRESIONADO);
       break;
   }
 }
