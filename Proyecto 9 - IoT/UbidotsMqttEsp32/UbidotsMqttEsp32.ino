@@ -1,12 +1,16 @@
 #include "IUbidots.h"
 #include "UbiNeyenMartin.h"
 
+#define VCC_ON   pinMode(VCC,OUTPUT);\
+                 digitalWrite(VCC, HIGH);
+
 void setup() {
   Serial.begin(115200);
   #ifdef COMPILE_ESP32
     analogReadResolution(RESOLUTION); // Solo para esp32
   #endif
   pinMode(LDR_PIN,INPUT);
+  VCC_ON;
   ubiSetup(callback); 
   ubiSubscribe(&boton);
 }

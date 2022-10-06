@@ -20,9 +20,11 @@
   #ifdef COMPILE_ESP32
     #define RESOLUTION  12 
     #define LDR_PIN     33
+    #define VCC         12
   #else
     #define RESOLUTION  10 // Compatible con Arduino Uno
     #define LDR_PIN     A0
+    #define VCC         13
   #endif
   #define READ_LDR analogRead(LDR_PIN) * (100.0 / pow(2,RESOLUTION))
 
