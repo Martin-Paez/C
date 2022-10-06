@@ -6,7 +6,7 @@
 
 /* ---------------------------------  BOTON ------------------------------- */
 
-  #define BOTON_FREQ  2000
+  #define BOTON_FREQ  5000
   #define PRESIONADO  0
   #define BOTON(val)  CREATE_MACRO(boton, PRESIONADO , val)
   
@@ -14,12 +14,12 @@
 
 /* ----------------------------------  LDR -------------------------------- */
 
-  #define LDR_FREQ    10000
+  #define LDR_FREQ    5000
   #define INTENSIDAD  0
   
   #ifdef COMPILE_ESP32
     #define RESOLUTION  12 
-    #define LDR_PIN     13
+    #define LDR_PIN     33
   #else
     #define RESOLUTION  10 // Compatible con Arduino Uno
     #define LDR_PIN     A0

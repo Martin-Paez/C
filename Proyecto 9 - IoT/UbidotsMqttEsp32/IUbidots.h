@@ -16,7 +16,7 @@
 
   const char *UBIDOTS_TOKEN = "BBFF-FmazbkPOSL3W0HgnKOAIF6nV5M9JGF";  
 
-  //#define COMPILE_ESP32
+  #define COMPILE_ESP32
 
   #ifdef  COMPILE_ESP32               // Para programar con el esp32
     #include "UbidotsEsp32Mqtt.h"     // Con la API provista por ubidots
