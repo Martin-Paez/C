@@ -8,13 +8,13 @@ void setup() {
   #endif
   pinMode(LDR_PIN,INPUT);
   ubiSetup(callback); 
-  //ubiSubscribe(&boton);
+  ubiSubscribe(&boton);
 }
 
 void loop() {
   ubiConnect();
   ubiCheck(&boton);
-  //ubiCheck(&ldr);
+  ubiCheck(&ldr);
   ubiLoop();
 }
 
@@ -30,9 +30,11 @@ void callback(char *topic, byte *payload, unsigned int length)
   switch((char)payload[0])
   {
     case '0': // Actualizo estado de Boton
+      Serial.println("Desabilitando publicacion del boton");
       DISABLE_PUBLISH(BOTON(FALSE), PRESIONADO);
       break;
     case '1': // Preparo publicacion off
+      Serial.println("Habilitando publicacion del boton");
       ENABLE_PUBLISH(BOTON(FALSE), PRESIONADO);
       break;
   }

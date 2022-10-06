@@ -25,7 +25,7 @@
   {
     int       timer;
     int       frequency;
-    bool      stop;
+    bool      paused;
     char*     varName;
     bool      eEsInt;
     union V
@@ -54,9 +54,9 @@
   #define TIME(d,v)               (d)->vars[v].timer
   #define ELAPSED(d,v)            ( millis() - TIME(d,v) )
   #define FREQUENCY(d,v)          (d)->vars[v].frequency
-  #define RESET(d,v)              ((d)->vars[v].timer = 0 )
-  #define DISABLE_PUBLISH(d,v)    ((d)->vars[v].stop = true )
-  #define ENABLE_PUBLISH(d,v)     RESET(d,v); (d)->vars[v].stop = false
-  #define NOT_PUBLISH_TIME(d,v)   ((d)->vars[v].stop || ELAPSED(d,v) < FREQUENCY(d,v) )
+  #define RESET(d,v)              ((d)->vars[v].timer = millis() )
+  #define DISABLE_PUBLISH(d,v)    ((d)->vars[v].paused = true )
+  #define ENABLE_PUBLISH(d,v)     RESET(d,v); (d)->vars[v].paused = false
+  #define NOT_PUBLISH_TIME(d,v)   ((d)->vars[v].paused || ELAPSED(d,v) < FREQUENCY(d,v) )
                                           
 #endif
