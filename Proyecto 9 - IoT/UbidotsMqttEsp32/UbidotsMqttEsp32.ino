@@ -7,7 +7,7 @@
 void setup() {
   Serial.begin(115200);
   #ifdef COMPILE_ESP32
-    analogReadResolution(RESOLUTION); // Solo para esp32
+    analogReadResolution(RESOLUTION);
   #endif
   pinMode(LDR_PIN,INPUT);
   VCC_ON;
@@ -24,6 +24,10 @@ void loop() {
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
+  Serial.println("");
+  Serial.println("callback()");
+  Serial.print("millis(): ");
+  Serial.println(millis());
   Serial.print("Mensaje de Ubidots [");
   Serial.print(topic);
   Serial.print("] ");

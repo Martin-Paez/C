@@ -16,14 +16,19 @@
 
   const char *UBIDOTS_TOKEN = "BBFF-FmazbkPOSL3W0HgnKOAIF6nV5M9JGF";  
 
-  #define COMPILE_ESP32
+  //#define COMPILE_ESP32
 
   #ifdef  COMPILE_ESP32               // Para programar con el esp32
     #include "UbidotsEsp32Mqtt.h"     // Con la API provista por ubidots
     Ubidots ubidots(UBIDOTS_TOKEN);
   #else                               // Para simular con arduino
-    #include "FakeUbiEsp.cpp"       
-    FakeUbiEsp ubidots(millis, false);
+    #include "FakeUbiEsp.cpp"      
+    Timer loss(15000, millis); 
+    FakeDevice fakeBoton(8000,"boton","presionado","1",1,"0",1,millis);
+    FakeDevice fakeDevices[1] = {fakeBoton};
+    void serialStr(char* txt) { Serial.println(txt); }
+    void serialInt(int n) { Serial.println(n); }
+    FakeUbiEsp ubidots(loss, fakeDevices, 1, serialStr, serialInt, millis);
   #endif
 
 

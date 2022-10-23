@@ -43,13 +43,13 @@
   };
   
   #define DEVICE(d)               (d)->device
-  #define TOPIC(d,v)              DEVICE(d), NAME(d,v)
+  #define TOPIC(d,v)              DEVICE(d), VARNAME(d,v)
 
   #define V(d,v)                  (d)->vars[v].e
   #define SET(d,v,i)              ( V(d,v).value = i )
   #define GET(d,v)                ( ((d)->vars[v].eEsInt) ? V(d,v).value : (V(d,v).f)() )
-  #define NAME(d,v)               (d)->vars[v].varName
-  #define TOPIC_VAL(d,v)          NAME(d,v), GET(d,v)
+  #define VARNAME(d,v)            (d)->vars[v].varName
+  #define TOPIC_VAL(d,v)          VARNAME(d,v), GET(d,v)
   
   #define TIME(d,v)               (d)->vars[v].timer
   #define ELAPSED(d,v)            ( millis() - TIME(d,v) )
