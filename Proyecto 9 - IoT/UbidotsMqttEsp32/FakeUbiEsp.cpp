@@ -145,7 +145,7 @@ class FakeUbiEsp
       serialStr(method);
       serialStr("millis(): ");
       serialInt(millis());
-      serialStr("Tiempo transcurrido :");
+      serialStr("Tiempo transcurrido desde la ultima operacion :");
       serialInt(t.elapsed());
       serialStr("desde la operacion :");
       serialStr(tag);

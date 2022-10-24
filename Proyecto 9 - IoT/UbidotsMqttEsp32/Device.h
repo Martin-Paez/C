@@ -10,12 +10,8 @@
   //      #define BOTON_VERDE   CREATE_MACRO(botonera, 1, val)  
   //
   //    loop:
-  //      BOTON_VERDE(FALSE);                 // setea en FALSE el boton verde
-  //      ubiPublish( BOTON_ROJO(TRUE) );     // setea el boton rojo y publica todas las variables que tenga el boton
-  //
-  //    loop2:
-  //      ubiAdd( BOTON_VERDE(FALSE) );       // se setea y agrega al JSON, pero todavia no se publica
-  //      ubiCommit( &botonera );             // publica solo el boton verde
+  //      BOTON_VERDE(FALSE);              // setea en FALSE el boton verde
+  //      ubiPush( BOTON_ROJO(TRUE) );     // setea el boton rojo y publica todas las variables que tenga el boton
   //
   #define CREATE_MACRO(device, var, val)    ([&device](int i) -> struct Device* { \
                                                 SET(&device,var,i); \

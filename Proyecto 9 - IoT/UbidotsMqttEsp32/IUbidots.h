@@ -14,13 +14,20 @@
   
 /* -------------------------------- UBIDOTS ------------------------------- */
 
-  const char *UBIDOTS_TOKEN = "BBFF-FmazbkPOSL3W0HgnKOAIF6nV5M9JGF";  
+  const char *UBIDOTS_TOKEN = "BBFF-FmazbkPOSL3W0HgnKOAIF6nV5M9JGF";
 
   //#define COMPILE_ESP32
+  #define UBIDOTS
+  //#define MOSQUITTO
 
   #ifdef  COMPILE_ESP32               // Para programar con el esp32
-    #include "UbidotsEsp32Mqtt.h"     // Con la API provista por ubidots
-    Ubidots ubidots(UBIDOTS_TOKEN);
+    #ifdef  UBIDOTS 
+      #include "UbidotsEsp32Mqtt.h"     // Con la API provista por ubidots
+      Ubidots ubidots(UBIDOTS_TOKEN);
+/*    #elif   MOSQUITTO
+      #include "Mosquito.cpp"
+      Mosquito broker(UBIDOTS_TOKEN);*/
+    #endif
   #else                               // Para simular con arduino
     #include "FakeUbiEsp.cpp"      
     Timer loss(15000, millis); 
