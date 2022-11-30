@@ -1,8 +1,8 @@
 #ifndef _UBI_NEYEN_MARTIN_H_
 #define _UBI_NEYEN_MARTIN_H_
 
-  #include "Device.h"
-  #include  "Macros.h"
+  #include "../../Utils/Device.h"
+  #include "../../Utils/Macros.h"
 
 /* ---------------------------------  BOTON ------------------------------- */
 
@@ -17,11 +17,12 @@
   #define LDR_FREQ    5000
   #define INTENSIDAD  0
   
-  #ifdef COMPILE_ESP32
+  #ifdef ESP32
     #define RESOLUTION  12 
     #define LDR_PIN     33
     #define VCC         12
-  #else
+  #endif
+  #ifdef ARDUINO_UNO
     #define RESOLUTION  10 // Compatible con Arduino Uno
     #define LDR_PIN     A0
     #define VCC         13

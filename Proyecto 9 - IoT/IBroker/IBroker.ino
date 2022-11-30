@@ -1,5 +1,5 @@
-#include "IUbidots.h"
-#include "UbiNeyenMartin.h"
+import "IBroker/IBroker.h"
+import "IBroker/Ubidots/UbiNeyenMartin.h"
 
 #define VCC_ON   pinMode(VCC,OUTPUT);\
                  digitalWrite(VCC, HIGH);
@@ -9,10 +9,10 @@ void setup() {
   #ifdef COMPILE_ESP32
     analogReadResolution(RESOLUTION);
   #endif
-  pinMode(LDR_PIN,INPUT);
   VCC_ON;
   ubiSetup(callback); 
   ubiSubscribe(&boton);
+  pinMode(LDR_PIN,INPUT);
 }
 
 void loop() {

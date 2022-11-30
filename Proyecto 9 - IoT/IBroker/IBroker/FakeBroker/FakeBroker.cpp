@@ -1,76 +1,8 @@
-class Timer
-{
-  public :
-    bool playing = true;
-    int frequency;
-    long unsigned int (*millis)();
-    int timer;
+#include "../IBroker.cpp"
+#include "../../Utils/Timer.cpp"
+#include "FakeDevice.cpp"
 
-  public :
-    Timer() {
-      
-    }
-    Timer(int frequency, long unsigned int (*millis)()){
-      this->frequency = frequency;
-      this->millis = millis;
-      reset();
-    }
-
-    int elapsed() {
-      return millis() - timer;
-    }
-
-    bool next() {
-      bool ok = isTime();
-      if (ok)
-        reset();
-      return ok;
-    }
-    
-    bool isTime(){
-      return playing && elapsed() > frequency;;
-    }
-    
-    void reset(){
-      timer = millis();
-    }
-
-    void turnOn(){
-      playing = true;
-      reset();
-    }
-};
-
-class FakeDevice : public Timer
-{
-  public :
-    unsigned char* requestMsg; 
-    unsigned char* responseMsg; 
-    unsigned int reqLen;
-    unsigned int resLen;
-    char *device;
-    char *var;
-    
-  public :
-    FakeDevice (int frequency, char* device, char* var,
-                unsigned char *requestMsg,
-                unsigned int reqLen,
-                unsigned char *responseMsg,
-                unsigned int resLen,
-                long unsigned int (*millis)()) 
-    : Timer(frequency, millis)
-    {
-      this->var = var;
-      this->device = device;
-      this->requestMsg = requestMsg;
-      this->responseMsg = responseMsg;
-      this->timer = false;
-      this->reqLen = reqLen;
-      this->resLen = resLen;
-    }
-};
-
-class FakeUbiEsp
+class FakeBroker : public IBroker
 {
   private :
     void (*callback)(char *, unsigned char *, unsigned int );
@@ -82,7 +14,7 @@ class FakeUbiEsp
     long unsigned int (*millis)();
     
   public:
-    FakeUbiEsp(Timer connectionLoss, FakeDevice *fd, int fdLen,
+    FakeBroker(Timer connectionLoss, FakeDevice *fd, int fdLen,
                void (*serialStr)(char *), void (*serialInt)(int n),
                long unsigned int (*millis)()) {
       this->t = connectionLoss;
@@ -99,6 +31,10 @@ class FakeUbiEsp
         fd[i].turnOn();
     }
     
+    bool ucmps(unsigned char* a, char* b){
+      return cmps(reinterpret_cast<char *>(a),b);
+    }
+
     bool cmps(char* a, char* b){
       int i=0;
       while( a[i] != '\0' && b[i] != '\0' && b[i] == a[i++]);
@@ -109,7 +45,7 @@ class FakeUbiEsp
     
     void publish(char* d) {
       for (int i=0; i<fdLen; i++)
-        if ( fd[i].responseMsg != "" && cmps(d,fd[i].device) ) {
+        if ( ! ucmps(fd[i].responseMsg,"") && cmps(d,fd[i].device) ) {
           serialStr("");
           serialStr("FakeUbi>");
           serialStr("publish()");
@@ -131,12 +67,12 @@ class FakeUbiEsp
     
     void loop() {
       for (int i=0; i<fdLen; i++)
-          if ( fd[i].requestMsg != "" && fd[i].isTime() ) {
+          if ( ! ucmps(fd[i].requestMsg,"") && fd[i].isTime() ) {
             printElapsed(fd[i],"callback","loop()");
             serialStr(fd[i].device);
             callback(fd[i].var,fd[i].requestMsg,fd[i].reqLen);
             fd[i].reset();
-          }
+          } 
     }
 
     void printElapsed(Timer t, char *tag, char* method) {
