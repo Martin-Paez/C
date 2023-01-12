@@ -1,7 +1,7 @@
 BOARD?=
 PORT?=
 
-.PHONY: c w upload write comppile clean style
+.PHONY: c w upload write compile clean style
 
 w: style compile upload clean
 

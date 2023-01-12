@@ -1,5 +1,5 @@
-import "IBroker/IBroker.h"
-import "IBroker/Ubidots/UbiNeyenMartin.h"
+#include "IBroker/IBroker.h"
+#include "IBroker/Ubidots/UbiNeyenMartin.h"
 
 #define VCC_ON   pinMode(VCC,OUTPUT);\
                  digitalWrite(VCC, HIGH);
